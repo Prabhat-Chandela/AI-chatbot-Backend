@@ -1,16 +1,16 @@
-import { generateIdeas, getDetailedSuggestion } from "../utilities/aiUtility.js";
+import { generateIdeas, getDetailedSuggestion } from "../services/geminiAiService.js";
 
 
 const generatedIdeas = async (req, res) => {
     try {
         const userQuery = req.body.query || "What new app should I build?";
         const ideas = await generateIdeas(userQuery);
-
+        
         if (!ideas || ideas.length < 3) {
             return res.status(500).json({ error: "Failed to generate ideas." });
         }
 
-        res.json({ ideas });
+        res.status(200).json({ ideas });
 
     } catch (error) {
         res.status(500).json({ error: "An error occurred while generating ideas." });
