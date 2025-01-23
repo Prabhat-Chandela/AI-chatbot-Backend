@@ -1,4 +1,5 @@
 import { generateIdeas, getDetailedSuggestion } from "../services/geminiAiService.js";
+import { generateImage } from "../services/huggingFaceAiService.js";
 
 
 const generatedIdeas = async (req, res) => {
@@ -40,5 +41,21 @@ const suggestedSteps =  async (req, res) => {
     }
 }
 
+const generatedImage = async (req, res) => {
+    try {
+        const userQuery = req.body.query;
 
-export{generatedIdeas, suggestedSteps}
+        if(!userQuery){
+            res.status(400).json({error: "User Query / Prompt is required."});
+        }
+
+        const image = await generateImage(userQuery);
+        res.status(200).json({image});
+
+    } catch (error) {
+        res.status(500).json({ error: "An error occurred while generating image." });
+    }
+}
+
+
+export{generatedIdeas, suggestedSteps, generatedImage}
