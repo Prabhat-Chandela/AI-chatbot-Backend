@@ -5,7 +5,7 @@ const app = express();
 app.use(express.json({limit:"16kb"}))
 
 // Routes setup.
-import aiRouter from "./routes/ai.routes.js";
+import aiRouter from "./routes/aiRoutes.js";
 
 app.use("/api/v1", aiRouter);
 

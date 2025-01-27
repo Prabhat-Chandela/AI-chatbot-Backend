@@ -19,7 +19,7 @@ const generateImage = async (query) => {
 
     } catch (error) {
         console.error("Error calling HuggingFace API:", error);
-        return null;
+        return "An error occurred while generating the image. Please try again.";
     }
 
 }

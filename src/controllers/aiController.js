@@ -6,7 +6,7 @@ const generatedIdeas = async (req, res) => {
     try {
         const userQuery = req.body.query || "What new app should I build?";
         const ideas = await generateIdeas(userQuery);
-        
+
         if (!ideas || ideas.length < 3) {
             return res.status(500).json({ error: "Failed to generate ideas." });
         }
@@ -18,26 +18,19 @@ const generatedIdeas = async (req, res) => {
     }
 }
 
-const suggestedSteps =  async (req, res) => {
-    const { selectedIdeas, allIdeas } = req.body;
-
-    if (!selectedIdeas || selectedIdeas.length !== 2) {
-        return res.status(400).json({ error: "Please select exactly 2 ideas." });
-    }
-
+const suggestedSteps = async (req, res) => {
     try {
-        const detailedSuggestions = await Promise.all(
-            selectedIdeas.map(async (index) => {
-                const idea = allIdeas[index - 1];
-                const suggestion = await getDetailedSuggestion(idea);
-                return { idea, suggestion };
-            })
-        );
+        const {selectedIdeaTitle,selectedIdea} = req.body.idea;
 
-        res.json({ suggestions: detailedSuggestions });
-        
+        if (!selectedIdea) {
+            return res.status(400).json({ error: "Please select an idea or approach." });
+        }
+
+        const detailedSuggestion = await getDetailedSuggestion(selectedIdea);
+        res.status(200).json({title: selectedIdeaTitle, suggestion: detailedSuggestion });
+
     } catch (error) {
-        res.status(500).json({ error: "An error occurred while generating detailed suggestions." });
+        res.status(500).json({ error: "An error occurred while generating detailed suggestion." });
     }
 }
 
@@ -45,12 +38,12 @@ const generatedImage = async (req, res) => {
     try {
         const userQuery = req.body.query;
 
-        if(!userQuery){
-            res.status(400).json({error: "User Query / Prompt is required."});
+        if (!userQuery) {
+            res.status(400).json({ error: "User Query / Prompt is required." });
         }
 
         const image = await generateImage(userQuery);
-        res.status(200).json({image});
+        res.status(200).json({ image });
 
     } catch (error) {
         res.status(500).json({ error: "An error occurred while generating image." });
@@ -58,4 +51,4 @@ const generatedImage = async (req, res) => {
 }
 
 
-export{generatedIdeas, suggestedSteps, generatedImage}
+export { generatedIdeas, suggestedSteps, generatedImage }
